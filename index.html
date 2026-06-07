@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width,initial-scale=1">
+
+<title>Ficha Cadastral PMESP</title>
+
+<link rel="stylesheet"
+href="style.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- SALVAR IMAGEM EM:
+     /imagens/cabecalho.png -->
+
+<img
+src="Captura de tela 1 140205.png"
+class="cabecalho">
+
+<h1>FICHA CADASTRAL</h1>
+
+<form id="fichaForm">
+
+<section>
+
+<h2>Dados Pessoais</h2>
+
+<input id="nome" placeholder="Nome Completo">
+
+<input id="posto" placeholder="Posto / Graduação">
+
+<input id="re" placeholder="RE">
+
+<input id="guerra" placeholder="Nome de Guerra">
+
+<label>Data de Admissão</label>
+<input type="date" id="admissao">
+
+<label>Data de Nascimento</label>
+<input type="date" id="nascimento">
+
+<input id="civil" placeholder="Estado Civil">
+
+<input id="endereco" placeholder="Endereço">
+
+<input id="bairro" placeholder="Bairro">
+
+<input id="municipio" placeholder="Município">
+
+<input id="celular" placeholder="Celular">
+
+<input id="residencial"
+placeholder="Telefone Residencial">
+
+<input id="recado"
+placeholder="Telefone Recado">
+
+<input id="emailf"
+placeholder="E-mail Funcional">
+
+<input id="emailp"
+placeholder="E-mail Particular">
+
+</section>
+
+<section>
+
+<h2>Contato de Emergência</h2>
+
+<textarea
+id="contato1"
+placeholder="Nome, parentesco e telefone">
+</textarea>
+
+<textarea
+id="contato2"
+placeholder="Nome, parentesco e telefone">
+</textarea>
+
+</section>
+
+<section>
+
+<h2>Documentos</h2>
+
+<input id="rg" placeholder="RG">
+
+<input id="cpf" placeholder="CPF">
+
+<input id="cnh" placeholder="CNH">
+
+<input id="categoria"
+placeholder="Categoria CNH">
+
+<input id="titulo"
+placeholder="Título Eleitoral">
+
+<input id="zona"
+placeholder="Zona">
+
+<input id="secao"
+placeholder="Seção">
+
+<input id="municipioTitulo"
+placeholder="Município do Título">
+
+<input id="escola"
+placeholder="Escola em que Vota">
+
+<input id="endEleitoral"
+placeholder="Endereço Eleitoral">
+
+</section>
+
+<section>
+
+<h2>Dados Funcionais</h2>
+
+<textarea
+id="cursosPM"
+placeholder="Cursos realizados na PMESP">
+</textarea>
+
+<input id="laurea"
+placeholder="Láurea de Mérito Pessoal">
+
+<label>Última Promoção</label>
+<input type="date"
+id="promocao">
+
+<input id="sat"
+placeholder="Habilitação SAT">
+
+<textarea
+id="unidades"
+placeholder="Unidades anteriores">
+</textarea>
+
+<textarea
+id="arma"
+placeholder="Arma Particular">
+</textarea>
+
+</section>
+
+<section>
+
+<h2>Escolaridade</h2>
+
+<label>
+<input type="checkbox"
+id="medio">
+Ensino Médio
+</label>
+
+<label>
+<input type="checkbox"
+id="superior">
+Ensino Superior
+</label>
+
+<input
+id="graduacao"
+placeholder="Graduação">
+
+<textarea
+id="outrosCursos"
+placeholder="Cursos em outras instituições">
+</textarea>
+
+</section>
+
+<section>
+
+<h2>Dados Bancários</h2>
+
+<input id="banco"
+placeholder="Banco">
+
+<input id="agencia"
+placeholder="Agência">
+
+<input id="conta"
+placeholder="Conta Corrente">
+
+</section>
+
+<section>
+
+<h2>Assinatura</h2>
+
+<p>
+Assinatura
+</p>
+
+<canvas
+id="signature-pad"
+width="800"
+height="250">
+</canvas>
+
+<button
+type="button"
+onclick="limparAssinatura()">
+Limpar Assinatura
+</button>
+
+</section>
+
+<br>
+
+<button
+type="button"
+onclick="gerarPDF()">
+GERAR PDF
+</button>
+
+</form>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
