@@ -1,248 +1,607 @@
+// ======================================
+// DEPENDENTES
+// ======================================
+
+let contadorDependentes = 0;
+
+function adicionarDependente() {
+
+    contadorDependentes++;
+
+    const container =
+        document.getElementById(
+            "dependentesContainer"
+        );
+
+    const div =
+        document.createElement("div");
+
+    div.className = "dependente";
+
+    div.innerHTML = `
+
+        <h3>Dependente ${contadorDependentes}</h3>
+
+        <input
+            type="text"
+            class="depNome"
+            placeholder="Nome do Dependente">
+
+        <input
+            type="text"
+            class="depParentesco"
+            placeholder="Parentesco">
+
+        <input
+            type="text"
+            class="depCpf"
+            placeholder="CPF">
+
+        <label>Data de Nascimento</label>
+
+        <input
+            type="date"
+            class="depNascimento">
+
+        <button
+            type="button"
+            class="btnRemover"
+            onclick="this.parentElement.remove()">
+
+            Remover Dependente
+
+        </button>
+
+    `;
+
+    container.appendChild(div);
+
+}
+
+adicionarDependente();
+
+
+// ======================================
+// ASSINATURA
+// ======================================
+
 const canvas =
-document.getElementById(
-"signature-pad"
-);
+    document.getElementById(
+        "signature-pad"
+    );
 
 const ctx =
-canvas.getContext("2d");
+    canvas.getContext("2d");
 
 ctx.lineWidth = 2;
 
+ctx.lineCap = "round";
+
 let desenhando = false;
 
-function posicao(event){
+function obterPosicao(event) {
 
-const rect =
-canvas.getBoundingClientRect();
+    const rect =
+        canvas.getBoundingClientRect();
 
-const p =
-event.touches ?
-event.touches[0] :
-event;
+    const ponto =
+        event.touches ?
+        event.touches[0] :
+        event;
 
-const scaleX =
-canvas.width / rect.width;
+    const scaleX =
+        canvas.width / rect.width;
 
-const scaleY =
-canvas.height / rect.height;
+    const scaleY =
+        canvas.height / rect.height;
 
-return {
+    return {
 
-x:(p.clientX-rect.left)
-* scaleX,
+        x:
+            (ponto.clientX - rect.left)
+            * scaleX,
 
-y:(p.clientY-rect.top)
-* scaleY
+        y:
+            (ponto.clientY - rect.top)
+            * scaleY
 
-};
-
-}
-
-function iniciar(event){
-
-desenhando=true;
-
-const p=posicao(event);
-
-ctx.beginPath();
-
-ctx.moveTo(
-p.x,
-p.y
-);
+    };
 
 }
 
-function desenhar(event){
+function iniciar(event) {
 
-if(!desenhando)
-return;
+    desenhando = true;
 
-event.preventDefault();
+    const p =
+        obterPosicao(event);
 
-const p=posicao(event);
+    ctx.beginPath();
 
-ctx.lineTo(
-p.x,
-p.y
-);
-
-ctx.stroke();
+    ctx.moveTo(
+        p.x,
+        p.y
+    );
 
 }
 
-function parar(){
+function desenhar(event) {
 
-desenhando=false;
+    if (!desenhando)
+        return;
+
+    event.preventDefault();
+
+    const p =
+        obterPosicao(event);
+
+    ctx.lineTo(
+        p.x,
+        p.y
+    );
+
+    ctx.stroke();
+
+}
+
+function parar() {
+
+    desenhando = false;
 
 }
 
 canvas.addEventListener(
-"mousedown",
-iniciar
+    "mousedown",
+    iniciar
 );
 
 canvas.addEventListener(
-"mousemove",
-desenhar
+    "mousemove",
+    desenhar
 );
 
 window.addEventListener(
-"mouseup",
-parar
+    "mouseup",
+    parar
 );
 
 canvas.addEventListener(
-"touchstart",
-iniciar
+    "touchstart",
+    iniciar
 );
 
 canvas.addEventListener(
-"touchmove",
-desenhar,
-{passive:false}
+    "touchmove",
+    desenhar,
+    { passive:false }
 );
 
 canvas.addEventListener(
-"touchend",
-parar
+    "touchend",
+    parar
 );
 
-function limparAssinatura(){
+function limparAssinatura() {
 
-ctx.clearRect(
-0,
-0,
-canvas.width,
-canvas.height
-);
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
 
 }
 
-function gerarPDF(){
 
-    const assinatura = canvas.toDataURL("image/png");
+// ======================================
+// FORMATAR DATA
+// ======================================
+
+function formatarData(data) {
+
+    if (!data)
+        return "";
+
+    const partes =
+        data.split("-");
+
+    return `${partes[2]}/${partes[1]}/${partes[0]}`;
+
+}
+
+
+// ======================================
+// GERAR PDF
+// ======================================
+
+function gerarPDF() {
+
+    const assinatura =
+        canvas.toDataURL("image/png");
+
+    const dependentes = [];
+
+    document
+        .querySelectorAll(".dependente")
+        .forEach(dep => {
+
+            dependentes.push([
+
+                dep.querySelector(".depNome").value,
+
+                dep.querySelector(".depParentesco").value,
+
+                dep.querySelector(".depCpf").value,
+
+                formatarData(
+                    dep.querySelector(".depNascimento").value
+                )
+
+            ]);
+
+        });
 
     const docDefinition = {
 
         pageSize: "A4",
 
-        pageMargins: [30,30,30,30],
+        pageMargins: [30,30,30,40],
 
-        content: [
+        footer: function(currentPage,pageCount){
+
+            return {
+
+                text:
+                    "Página " +
+                    currentPage +
+                    " de " +
+                    pageCount,
+
+                alignment:"center",
+
+                fontSize:8
+
+            };
+
+        },
+
+        content:[
 
             {
-                text: "FICHA CADASTRAL PMESP",
-                style: "titulo"
+
+                text:
+                    "POLÍCIA MILITAR DO ESTADO DE SÃO PAULO",
+
+                style:"titulo"
+
             },
 
             {
-                text: "DADOS PESSOAIS",
-                style: "secao"
+
+                text:
+                    "FICHA CADASTRAL",
+
+                style:"subtitulo"
+
             },
 
-            `Nome Completo: ${document.getElementById("nome").value}`,
-            `Posto/Graduação: ${document.getElementById("posto").value}`,
-            `RE: ${document.getElementById("re").value}`,
-            `Nome de Guerra: ${document.getElementById("guerra").value}`,
-            `Data de Admissão: ${document.getElementById("admissao").value}`,
-            `Data de Nascimento: ${document.getElementById("nascimento").value}`,
-            `Estado Civil: ${document.getElementById("civil").value}`,
-            `Endereço: ${document.getElementById("endereco").value}`,
-            `Bairro: ${document.getElementById("bairro").value}`,
-            `Município: ${document.getElementById("municipio").value}`,
-            `Celular: ${document.getElementById("celular").value}`,
-            `Telefone Residencial: ${document.getElementById("residencial").value}`,
-            `Telefone Recado: ${document.getElementById("recado").value}`,
-            `E-mail Funcional: ${document.getElementById("emailf").value}`,
-            `E-mail Particular: ${document.getElementById("emailp").value}`,
+            // DADOS PESSOAIS
 
             {
-                text: "CONTATO DE EMERGÊNCIA",
-                style: "secao"
+
+                text:"DADOS PESSOAIS",
+
+                style:"secao"
+
+            },
+
+            {
+                table:{
+                    widths:["*","*"],
+                    body:[
+
+                        ["Nome Completo", document.getElementById("nome").value],
+
+                        ["Posto/Graduação", document.getElementById("posto").value],
+
+                        ["RE", document.getElementById("re").value],
+
+                        ["Nome de Guerra", document.getElementById("guerra").value],
+
+                        ["Data Admissão", formatarData(document.getElementById("admissao").value)],
+
+                        ["Data Nascimento", formatarData(document.getElementById("nascimento").value)],
+
+                        ["Estado Civil", document.getElementById("civil").value],
+
+                        ["Tipo Sanguíneo", document.getElementById("sangue").value],
+
+                        ["Endereço", document.getElementById("endereco").value],
+
+                        ["Bairro", document.getElementById("bairro").value],
+
+                        ["Município", document.getElementById("municipio").value],
+
+                        ["Celular", document.getElementById("celular").value],
+
+                        ["Telefone Residencial", document.getElementById("residencial").value],
+
+                        ["Telefone Recado", document.getElementById("recado").value],
+
+                        ["E-mail Funcional", document.getElementById("emailf").value],
+
+                        ["E-mail Particular", document.getElementById("emailp").value]
+
+                    ]
+                }
+            },
+
+            {
+
+                text:"DADOS DO CÔNJUGE",
+
+                style:"secao"
+
+            },
+
+            {
+                table:{
+                    widths:["*","*"],
+                    body:[
+
+                        ["Nome", document.getElementById("conjugeNome").value],
+
+                        ["CPF", document.getElementById("conjugeCpf").value],
+
+                        ["Nascimento", formatarData(document.getElementById("conjugeNascimento").value)],
+
+                        ["Telefone", document.getElementById("conjugeTelefone").value],
+
+                        ["Profissão", document.getElementById("conjugeProfissao").value]
+
+                    ]
+                }
+            },
+
+            {
+
+                text:"DEPENDENTES",
+
+                style:"secao"
+
+            },
+
+            {
+                table:{
+                    headerRows:1,
+                    widths:["*","*","*","*"],
+                    body:[
+                        [
+                            "Nome",
+                            "Parentesco",
+                            "CPF",
+                            "Nascimento"
+                        ],
+                        ...dependentes
+                    ]
+                }
+            },
+
+            {
+
+                text:"CONTATOS DE EMERGÊNCIA",
+
+                style:"secao"
+
             },
 
             document.getElementById("contato1").value,
+
             document.getElementById("contato2").value,
 
             {
-                text: "DOCUMENTOS",
-                style: "secao"
-            },
 
-            `RG: ${document.getElementById("rg").value}`,
-            `CPF: ${document.getElementById("cpf").value}`,
-            `CNH: ${document.getElementById("cnh").value}`,
-            `Categoria CNH: ${document.getElementById("categoria").value}`,
-            `Título Eleitoral: ${document.getElementById("titulo").value}`,
-            `Zona: ${document.getElementById("zona").value}`,
-            `Seção: ${document.getElementById("secao").value}`,
-            `Município do Título: ${document.getElementById("municipioTitulo").value}`,
-            `Escola em que Vota: ${document.getElementById("escola").value}`,
-            `Endereço Eleitoral: ${document.getElementById("endEleitoral").value}`,
+                text:"DOCUMENTOS",
 
-            {
-                text: "DADOS FUNCIONAIS",
-                style: "secao"
-            },
+                style:"secao"
 
-            `Cursos PMESP: ${document.getElementById("cursosPM").value}`,
-            `Láurea: ${document.getElementById("laurea").value}`,
-            `Última Promoção: ${document.getElementById("promocao").value}`,
-            `Habilitação SAT: ${document.getElementById("sat").value}`,
-            `Unidades Anteriores: ${document.getElementById("unidades").value}`,
-            `Arma Particular: ${document.getElementById("arma").value}`,
-
-            {
-                text: "ESCOLARIDADE",
-                style: "secao"
-            },
-
-            `Ensino Médio: ${document.getElementById("medio").checked ? "SIM" : "NÃO"}`,
-            `Ensino Superior: ${document.getElementById("superior").checked ? "SIM" : "NÃO"}`,
-            `Graduação: ${document.getElementById("graduacao").value}`,
-            `Outros Cursos: ${document.getElementById("outrosCursos").value}`,
-
-            {
-                text: "DADOS BANCÁRIOS",
-                style: "secao"
-            },
-
-            `Banco: ${document.getElementById("banco").value}`,
-            `Agência: ${document.getElementById("agencia").value}`,
-            `Conta Corrente: ${document.getElementById("conta").value}`,
-
-            {
-                text: "ASSINATURA",
-                style: "secao"
             },
 
             {
+                table:{
+                    widths:["*","*"],
+                    body:[
+
+                        ["RG", document.getElementById("rg").value],
+
+                        ["CPF", document.getElementById("cpf").value],
+
+                        ["CNH", document.getElementById("cnh").value],
+
+                        ["Categoria", document.getElementById("categoria").value],
+
+                        ["Título Eleitoral", document.getElementById("titulo").value],
+
+                        ["Zona", document.getElementById("zona").value],
+
+                        ["Seção", document.getElementById("secao").value],
+
+                        ["Município do Título", document.getElementById("municipioTitulo").value],
+
+                        ["Escola em que Vota", document.getElementById("escola").value],
+
+                        ["Endereço Eleitoral", document.getElementById("endEleitoral").value]
+
+                    ]
+                }
+            },
+
+            {
+
+                text:"DADOS FUNCIONAIS",
+
+                style:"secao"
+
+            },
+
+            {
+                table:{
+                    widths:["*","*"],
+                    body:[
+
+                        ["Cursos PMESP", document.getElementById("cursosPM").value],
+
+                        ["Láurea", document.getElementById("laurea").value],
+
+                        ["Última Promoção", formatarData(document.getElementById("promocao").value)],
+
+                        ["Habilitação SAT", document.getElementById("sat").value],
+
+                        ["Unidades Anteriores", document.getElementById("unidades").value],
+
+                        ["Arma Particular", document.getElementById("arma").value]
+
+                    ]
+                }
+            },
+
+            {
+
+                text:"ESCOLARIDADE",
+
+                style:"secao"
+
+            },
+
+            {
+                table:{
+                    widths:["*","*"],
+                    body:[
+
+                        ["Ensino Médio",
+                            document.getElementById("medio").checked ? "SIM" : "NÃO"
+                        ],
+
+                        ["Ensino Superior",
+                            document.getElementById("superior").checked ? "SIM" : "NÃO"
+                        ],
+
+                        ["Graduação",
+                            document.getElementById("graduacao").value
+                        ],
+
+                        ["Outros Cursos",
+                            document.getElementById("outrosCursos").value
+                        ]
+
+                    ]
+                }
+            },
+
+            {
+
+                text:"DADOS BANCÁRIOS",
+
+                style:"secao"
+
+            },
+
+            {
+                table:{
+                    widths:["*","*"],
+                    body:[
+
+                        ["Banco",
+                            document.getElementById("banco").value
+                        ],
+
+                        ["Agência",
+                            document.getElementById("agencia").value
+                        ],
+
+                        ["Conta Corrente",
+                            document.getElementById("conta").value
+                        ]
+
+                    ]
+                }
+            },
+
+            {
+
+                text:"ASSINATURA",
+
+                style:"secao",
+
+                pageBreak:"before"
+
+            },
+
+            {
+
                 image: assinatura,
-                width: 250
+
+                width:250,
+
+                alignment:"center"
+
             }
 
         ],
 
-        styles: {
+        styles:{
 
-            titulo: {
-                fontSize: 18,
-                bold: true,
-                alignment: "center",
-                margin: [0,0,0,20]
+            titulo:{
+
+                fontSize:16,
+
+                bold:true,
+
+                alignment:"center",
+
+                margin:[0,0,0,5]
+
             },
 
-            secao: {
-                fontSize: 14,
-                bold: true,
-                margin: [0,15,0,8]
+            subtitulo:{
+
+                fontSize:14,
+
+                bold:true,
+
+                alignment:"center",
+
+                margin:[0,0,0,15]
+
+            },
+
+            secao:{
+
+                fontSize:12,
+
+                bold:true,
+
+                margin:[0,15,0,8]
+
             }
 
         }
 
     };
 
-    pdfMake.createPdf(docDefinition)
-           .download("Ficha_Cadastral_PMESP.pdf");
+    pdfMake
+        .createPdf(docDefinition)
+        .download(
+
+            "Ficha_Cadastral_" +
+
+            (
+                document.getElementById("re").value ||
+                "PMESP"
+            )
+
+            + ".pdf"
+
+        );
+
 }
