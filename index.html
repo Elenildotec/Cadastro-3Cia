@@ -3,19 +3,15 @@
 
 <head>
 
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta name="viewport"
-content="width=device-width,initial-scale=1">
+    <title>Ficha Cadastral PMESP</title>
 
-<title>Ficha Cadastral PMESP</title>
+    <link rel="stylesheet" href="style.css">
 
-<link rel="stylesheet"
-href="style.css">
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/vfs_fonts.js"></script>
 
 </head>
 
@@ -23,212 +19,232 @@ href="style.css">
 
 <div class="container">
 
-<!-- SALVAR IMAGEM EM:
-     /imagens/cabecalho.png -->
+    <h1>FICHA CADASTRAL PMESP</h1>
 
-<img
-src="Captura de tela 1 140205.png"
-class="cabecalho">
+    <form id="fichaForm">
 
-<h1>FICHA CADASTRAL</h1>
+        <!-- DADOS PESSOAIS -->
 
-<form id="fichaForm">
+        <section>
 
-<section>
+            <h2>Dados Pessoais</h2>
 
-<h2>Dados Pessoais</h2>
+            <input type="text" id="nome" placeholder="Nome Completo">
 
-<input id="nome" placeholder="Nome Completo">
+            <input type="text" id="posto" placeholder="Posto / Graduação">
 
-<input id="posto" placeholder="Posto / Graduação">
+            <input type="text" id="re" placeholder="RE">
 
-<input id="re" placeholder="RE">
+            <input type="text" id="guerra" placeholder="Nome de Guerra">
 
-<input id="guerra" placeholder="Nome de Guerra">
+            <label>Data de Admissão</label>
+            <input type="date" id="admissao">
 
-<label>Data de Admissão</label>
-<input type="date" id="admissao">
+            <label>Data de Nascimento</label>
+            <input type="date" id="nascimento">
 
-<label>Data de Nascimento</label>
-<input type="date" id="nascimento">
+            <input type="text" id="civil" placeholder="Estado Civil">
 
-<input id="civil" placeholder="Estado Civil">
+            <input type="text" id="sangue" placeholder="Tipo Sanguíneo">
 
-<input id="endereco" placeholder="Endereço">
+            <input type="text" id="endereco" placeholder="Endereço">
 
-<input id="bairro" placeholder="Bairro">
+            <input type="text" id="bairro" placeholder="Bairro">
 
-<input id="municipio" placeholder="Município">
+            <input type="text" id="municipio" placeholder="Município">
 
-<input id="celular" placeholder="Celular">
+            <input type="text" id="celular" placeholder="Celular">
 
-<input id="residencial"
-placeholder="Telefone Residencial">
+            <input type="text" id="residencial" placeholder="Telefone Residencial">
 
-<input id="recado"
-placeholder="Telefone Recado">
+            <input type="text" id="recado" placeholder="Telefone para Recado">
 
-<input id="emailf"
-placeholder="E-mail Funcional">
+            <input type="email" id="emailf" placeholder="E-mail Funcional">
 
-<input id="emailp"
-placeholder="E-mail Particular">
+            <input type="email" id="emailp" placeholder="E-mail Particular">
 
-</section>
+        </section>
 
-<section>
+        <!-- CONJUGE -->
 
-<h2>Contato de Emergência</h2>
+        <section>
 
-<textarea
-id="contato1"
-placeholder="Nome, parentesco e telefone">
-</textarea>
+            <h2>Dados do Cônjuge</h2>
 
-<textarea
-id="contato2"
-placeholder="Nome, parentesco e telefone">
-</textarea>
+            <input type="text" id="conjugeNome" placeholder="Nome Completo">
 
-</section>
+            <input type="text" id="conjugeCpf" placeholder="CPF">
 
-<section>
+            <label>Data de Nascimento</label>
+            <input type="date" id="conjugeNascimento">
 
-<h2>Documentos</h2>
+            <input type="text" id="conjugeTelefone" placeholder="Telefone">
 
-<input id="rg" placeholder="RG">
+            <input type="text" id="conjugeProfissao" placeholder="Profissão">
 
-<input id="cpf" placeholder="CPF">
+        </section>
 
-<input id="cnh" placeholder="CNH">
+        <!-- DEPENDENTES -->
 
-<input id="categoria"
-placeholder="Categoria CNH">
+        <section>
 
-<input id="titulo"
-placeholder="Título Eleitoral">
+            <h2>Dependentes</h2>
 
-<input id="zona"
-placeholder="Zona">
+            <div id="dependentesContainer"></div>
 
-<input id="secao"
-placeholder="Seção">
+            <button
+                type="button"
+                class="btnAdicionar"
+                onclick="adicionarDependente()">
+                + Adicionar Dependente
+            </button>
 
-<input id="municipioTitulo"
-placeholder="Município do Título">
+        </section>
 
-<input id="escola"
-placeholder="Escola em que Vota">
+        <!-- CONTATO EMERGÊNCIA -->
 
-<input id="endEleitoral"
-placeholder="Endereço Eleitoral">
+        <section>
 
-</section>
+            <h2>Contato de Emergência</h2>
 
-<section>
+            <textarea
+                id="contato1"
+                placeholder="Nome, parentesco e telefone">
+            </textarea>
 
-<h2>Dados Funcionais</h2>
+            <textarea
+                id="contato2"
+                placeholder="Nome, parentesco e telefone">
+            </textarea>
 
-<textarea
-id="cursosPM"
-placeholder="Cursos realizados na PMESP">
-</textarea>
+        </section>
 
-<input id="laurea"
-placeholder="Láurea de Mérito Pessoal">
+        <!-- DOCUMENTOS -->
 
-<label>Última Promoção</label>
-<input type="date"
-id="promocao">
+        <section>
 
-<input id="sat"
-placeholder="Habilitação SAT">
+            <h2>Documentos</h2>
 
-<textarea
-id="unidades"
-placeholder="Unidades anteriores">
-</textarea>
+            <input type="text" id="rg" placeholder="RG">
 
-<textarea
-id="arma"
-placeholder="Arma Particular">
-</textarea>
+            <input type="text" id="cpf" placeholder="CPF">
 
-</section>
+            <input type="text" id="cnh" placeholder="CNH">
 
-<section>
+            <input type="text" id="categoria" placeholder="Categoria CNH">
 
-<h2>Escolaridade</h2>
+            <input type="text" id="titulo" placeholder="Título Eleitoral">
 
-<label>
-<input type="checkbox"
-id="medio">
-Ensino Médio
-</label>
+            <input type="text" id="zona" placeholder="Zona">
 
-<label>
-<input type="checkbox"
-id="superior">
-Ensino Superior
-</label>
+            <input type="text" id="secao" placeholder="Seção">
 
-<input
-id="graduacao"
-placeholder="Graduação">
+            <input type="text" id="municipioTitulo" placeholder="Município do Título">
 
-<textarea
-id="outrosCursos"
-placeholder="Cursos em outras instituições">
-</textarea>
+            <input type="text" id="escola" placeholder="Escola em que Vota">
 
-</section>
+            <input type="text" id="endEleitoral" placeholder="Endereço Eleitoral">
 
-<section>
+        </section>
 
-<h2>Dados Bancários</h2>
+        <!-- DADOS FUNCIONAIS -->
 
-<input id="banco"
-placeholder="Banco">
+        <section>
 
-<input id="agencia"
-placeholder="Agência">
+            <h2>Dados Funcionais</h2>
 
-<input id="conta"
-placeholder="Conta Corrente">
+            <textarea
+                id="cursosPM"
+                placeholder="Cursos realizados na PMESP">
+            </textarea>
 
-</section>
+            <input type="text" id="laurea" placeholder="Láurea de Mérito Pessoal">
 
-<section>
+            <label>Última Promoção</label>
+            <input type="date" id="promocao">
 
-<h2>Assinatura</h2>
+            <input type="text" id="sat" placeholder="Habilitação SAT">
 
-<p>
-Assinatura
-</p>
+            <textarea
+                id="unidades"
+                placeholder="Unidades anteriores">
+            </textarea>
 
-<canvas
-id="signature-pad"
-width="800"
-height="250">
-</canvas>
+            <textarea
+                id="arma"
+                placeholder="Arma Particular">
+            </textarea>
 
-<button
-type="button"
-onclick="limparAssinatura()">
-Limpar Assinatura
-</button>
+        </section>
 
-</section>
+        <!-- ESCOLARIDADE -->
 
-<br>
+        <section>
 
-<button
-type="button"
-onclick="gerarPDF()">
-GERAR PDF
-</button>
+            <h2>Escolaridade</h2>
 
-</form>
+            <label class="checkbox">
+                <input type="checkbox" id="medio">
+                Ensino Médio
+            </label>
+
+            <label class="checkbox">
+                <input type="checkbox" id="superior">
+                Ensino Superior
+            </label>
+
+            <input type="text" id="graduacao" placeholder="Graduação">
+
+            <textarea
+                id="outrosCursos"
+                placeholder="Cursos em outras instituições">
+            </textarea>
+
+        </section>
+
+        <!-- DADOS BANCARIOS -->
+
+        <section>
+
+            <h2>Dados Bancários</h2>
+
+            <input type="text" id="banco" placeholder="Banco">
+
+            <input type="text" id="agencia" placeholder="Agência">
+
+            <input type="text" id="conta" placeholder="Conta Corrente">
+
+        </section>
+
+        <!-- ASSINATURA -->
+
+        <section>
+
+            <h2>Assinatura</h2>
+
+            <canvas
+                id="signature-pad"
+                width="800"
+                height="250">
+            </canvas>
+
+            <button
+                type="button"
+                class="btnLimpar"
+                onclick="limparAssinatura()">
+                Limpar Assinatura
+            </button>
+
+        </section>
+
+        <button
+            type="button"
+            class="btnPdf"
+            onclick="gerarPDF()">
+            GERAR PDF
+        </button>
+
+    </form>
 
 </div>
 
