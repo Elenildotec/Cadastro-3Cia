@@ -533,15 +533,13 @@ function gerarPDF() {
 
                 style:"secao",
 
-                pageBreak:"before"
-
             },
 
             {
 
                 image: assinatura,
 
-                width:250,
+                width:150,
 
                 alignment:"center"
 
@@ -581,7 +579,7 @@ function gerarPDF() {
 
                 bold:true,
 
-                margin:[0,15,0,8]
+                margin:[0,8,0,4]
 
             }
 
